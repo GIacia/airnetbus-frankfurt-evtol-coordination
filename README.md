@@ -6,6 +6,10 @@ The project demonstrates a centralized Frankfurt airspace view where autonomous 
 
 This repository is intended as a post-hackathon archive and continuation point for future contributors. Generated maps, logs, and videos are not committed; they can be regenerated from the source pipeline below.
 
+<p align="center">
+  <img src="assets/frankfurt_coordination_preview.gif" alt="Frankfurt eVTOL multi-agent coordination preview" width="100%">
+</p>
+
 ## What This Prototype Does
 
 - Builds a Frankfurt city graph from OpenStreetMap using OSMnx.

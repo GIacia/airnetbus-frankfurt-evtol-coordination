@@ -29,6 +29,10 @@ TUM Science Hackathon 2026.txt
 *.zip
 *.pdf
 
+# Small README demo assets
+!assets/
+!assets/*.gif
+
 # OS / editor
 .DS_Store
 Thumbs.db
