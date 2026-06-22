@@ -2,7 +2,8 @@
 """
 SkyMesh presentation visualizer - enhanced version.
 
-Creates a high-resolution 30-second animation from SkyMesh simulator outputs:
+Opens an interactive preview by default, or exports a high-resolution animation
+when --output is provided:
 - many red moving eVTOL agents
 - dotted air-corridor graph
 - dynamic, low-opacity active planned route segments
@@ -20,8 +21,9 @@ Expected inputs:
     outputs_air/frankfurt_air_edges.geojson     optional
     outputs_air/frankfurt_air_nodes.geojson     optional
 
-Example:
-    python skymesh_visualizer_plus.py --project-root . --basemap satellite --duration 30 --fps 20 --output outputs_viz/skymesh_animation_plus.mp4
+Examples:
+    python skymesh_visualizer.py
+    python skymesh_visualizer.py --project-root . --basemap satellite --duration 30 --fps 20 --output outputs_viz/skymesh_animation_plus.mp4
 """
 
 from __future__ import annotations
@@ -97,11 +99,11 @@ def emergency_destination_label(event_type: str) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Create enhanced SkyMesh eVTOL animation")
+    parser = argparse.ArgumentParser(description="Preview or export the enhanced SkyMesh eVTOL animation")
     parser.add_argument("--project-root", default=".", help="Folder containing outputs_sim and outputs_air")
     parser.add_argument("--city-name", default="Frankfurt", help="City name shown in animation overlays")
     parser.add_argument("--city-slug", default="frankfurt", help="Filename prefix for air graph layers")
-    parser.add_argument("--output", default="outputs_viz/skymesh_animation_plus.mp4", help="Output .mp4 or .gif path")
+    parser.add_argument("--output", default=None, help="Optional output .mp4 or .gif path. If omitted, open a live preview window.")
     parser.add_argument("--duration", type=float, default=30.0, help="Target animation duration in seconds")
     parser.add_argument("--fps", type=int, default=20, help="Frames per second")
     parser.add_argument("--dpi", type=int, default=220, help="Output DPI")
@@ -118,7 +120,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--show-nodes", action="store_true", help="Show waypoint nodes")
     parser.add_argument("--max-edges", type=int, default=3500, help="Max air edges to draw for speed")
     parser.add_argument("--emergency-window", type=float, default=16.0, help="Highlight emergency agent for N simulation minutes")
-    parser.add_argument("--poster", action="store_true", help="Also export a final poster PNG")
+    parser.add_argument("--poster", action="store_true", help="Also export a final poster PNG when --output is used")
     return parser.parse_args()
 
 
@@ -540,12 +542,15 @@ def add_legend(ax: plt.Axes) -> None:
     leg.get_frame().set_alpha(0.72)
 
 
-def create_animation(args: argparse.Namespace) -> Path:
+def create_animation(args: argparse.Namespace) -> Path | None:
     root = Path(args.project_root)
-    out_path = Path(args.output)
-    if not out_path.is_absolute():
-        out_path = root / out_path
-    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path: Path | None = None
+    export_mode = bool(args.output)
+    if export_mode:
+        out_path = Path(args.output)
+        if not out_path.is_absolute():
+            out_path = root / out_path
+        out_path.parent.mkdir(parents=True, exist_ok=True)
 
     sim_log_path = require_file(root / "outputs_sim" / "simulation_log.csv", "simulation log")
     vertiports_path = require_file(root / "outputs_sim" / "vertiports.geojson", "vertiports GeoJSON")
@@ -794,6 +799,18 @@ def create_animation(args: argparse.Namespace) -> Path:
 
     anim = FuncAnimation(fig, update, frames=frames, interval=int(1000 / max(1, args.fps)), blit=False)
 
+    if not export_mode:
+        try:
+            fig.canvas.manager.set_window_title(f"{args.city_name} eVTOL Coordination Preview")
+        except Exception:
+            pass
+        print("[INFO] Opening interactive preview. Use --output path.mp4 or --output path.gif to export.")
+        if args.poster:
+            print("[WARN] --poster is ignored in preview mode. Use --output together with --poster.")
+        plt.show()
+        return None
+
+    assert out_path is not None
     if out_path.suffix.lower() == ".gif":
         writer = PillowWriter(fps=args.fps)
         anim.save(out_path, writer=writer, dpi=args.dpi)

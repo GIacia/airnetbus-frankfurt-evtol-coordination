@@ -57,7 +57,13 @@ python transform_frankfurt_to_air_corridors.py
 python skymesh_simulator.py
 ```
 
-Generate a presentation video only when needed:
+Open the interactive preview:
+
+```powershell
+python skymesh_visualizer.py
+```
+
+Export a presentation video only when needed:
 
 ```powershell
 python skymesh_visualizer.py --project-root . --city-name Frankfurt --city-slug frankfurt --duration 30 --fps 20 --output outputs_viz/airnetbus_frankfurt_demo.mp4 --poster

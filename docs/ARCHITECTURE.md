@@ -224,7 +224,8 @@ Main responsibilities:
 
 - Read simulator outputs.
 - Draw Frankfurt, air corridors, agents, weather cells, no-fly zones, emergency signals, target markers, and summary overlays.
-- Export MP4/GIF/PNG assets for demos.
+- Open an interactive preview by default.
+- Export MP4/GIF/PNG assets only when `--output` is provided.
 
 The visualizer is intentionally separated from the simulator. This lets contributors change route logic without touching presentation rendering, or redesign the animation without changing simulation state.
 
