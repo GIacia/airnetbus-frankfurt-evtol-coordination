@@ -1,0 +1,11 @@
+contextily>=1.5
+geopandas>=0.14
+matplotlib>=3.8
+networkx>=3.2
+numpy>=1.26
+osmnx>=1.9
+pandas>=2.1
+pillow>=10.0
+pyproj>=3.6
+shapely>=2.0
+static-ffmpeg>=2.7

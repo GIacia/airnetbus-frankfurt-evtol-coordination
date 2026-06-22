@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Local dependency bundle / cache
+.python_packages/
+cache/
+.agents/
+
+# Generated simulation artifacts
+outputs/
+outputs_air/
+outputs_sim/
+outputs_viz/
+
+# Archived / exploratory work
+archive_munich_20260620/
+legacy/
+tmp.py
+test.py
+
+# Large local artifacts
+*.mp4
+*.gif
+*.zip
+*.pdf
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
