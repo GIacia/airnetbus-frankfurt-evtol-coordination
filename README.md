@@ -4,6 +4,8 @@ City-scale multi-agent eVTOL routing and control-view prototype for the TUM Scie
 
 The project demonstrates a centralized Frankfurt airspace view where autonomous eVTOL agents receive missions, react to dynamic weather, avoid temporary no-fly zones, and prioritize emergency landings.
 
+This repository is intended as a post-hackathon archive and continuation point for future contributors. Generated maps, logs, and videos are not committed; they can be regenerated from the source pipeline below.
+
 ## What This Prototype Does
 
 - Builds a Frankfurt city graph from OpenStreetMap using OSMnx.
@@ -69,6 +71,8 @@ Generated artifacts are intentionally ignored by Git because they can be large a
 ## Modeling Scope
 
 This is a hackathon decision-support and visualization prototype, not a certified aviation simulator. The model is intentionally explainable: every route decision is based on explicit graph costs, weather/noise/battery constraints, emergency priority rules, and reservation conflicts. The structure is designed so real weather feeds, stronger traffic-management rules, or learned prediction models can be added later without replacing the whole pipeline.
+
+For a deeper implementation overview, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Repository Name
 
